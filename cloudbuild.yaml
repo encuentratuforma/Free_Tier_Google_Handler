@@ -8,8 +8,7 @@ steps:
       - '--region=europe-west1'       # Región
       - '--platform=managed'
       - '--allow-unauthenticated'     # Solo si debe estar abierto al público
-      - '--runtime=python311'         # Usa Python 3.11
-      - '--entry-point=app'           # Flask debe exponer "app" como instancia
+      - '--quiet'                     # Omitir prompts interactivos
 
 timeout: 900s
 options:
