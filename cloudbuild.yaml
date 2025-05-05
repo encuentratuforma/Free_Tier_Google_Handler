@@ -11,4 +11,5 @@ steps:
           --allow-unauthenticated \
           --project $PROJECT_ID
 
-timeout: 900s
+options:
+  logging: CLOUD_LOGGING_ONLY
