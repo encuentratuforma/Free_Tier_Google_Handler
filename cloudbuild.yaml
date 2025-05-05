@@ -1,17 +1,16 @@
 steps:
   - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: bash
     args:
-      - -c
-      - |
-        # Desplegar el servicio en Cloud Run con un tiempo de espera extendido (600 segundos)
-        gcloud run deploy budget-exceeded-handler \
-          --source . \
-          --region europe-west1 \
-          --platform managed \
-          --allow-unauthenticated \
-          --timeout 600 \
-          --project $PROJECT_ID
+      - 'run'
+      - 'deploy'
+      - 'budget-exceeded-handler'     # Nombre del servicio
+      - '--source=src'                # Subcarpeta con el código
+      - '--region=europe-west1'       # Región
+      - '--platform=managed'
+      - '--allow-unauthenticated'     # Solo si debe estar abierto al público
+      - '--runtime=python311'         # Usa Python 3.11
+      - '--entry-point=app'           # Flask debe exponer "app" como instancia
 
+timeout: 900s
 options:
   logging: CLOUD_LOGGING_ONLY
