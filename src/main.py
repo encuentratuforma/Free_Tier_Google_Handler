@@ -13,7 +13,7 @@ app = Flask(__name__)
 @app.route("/", methods=["POST"])
 def stop_services():
     envelope = request.get_json()
-    
+
     if not envelope:
         return "Bad Request: No Pub/Sub message received", 400
 
@@ -46,4 +46,4 @@ def stop_services():
         return "Services stopped (simulado)", 200
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=8080)
