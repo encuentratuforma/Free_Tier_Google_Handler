@@ -1,0 +1,14 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud run deploy budget-exceeded-handler \
+          --source src \
+          --region europe-west1 \
+          --platform managed \
+          --allow-unauthenticated \
+          --project $PROJECT_ID
+
+timeout: 900s
