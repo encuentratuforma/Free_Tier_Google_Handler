@@ -10,14 +10,17 @@ steps:
       - '--allow-unauthenticated'     # Solo si debe estar abierto al público
       - '--quiet'                     # Omitir prompts interactivos
 
-  # Establecer el entrypoint para usar gunicorn
+  # Establecer el entrypoint para usar gunicorn y pasar el puerto correctamente
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'run'
       - 'deploy'
       - 'budget-exceeded-handler'
-      - '--entrypoint=gunicorn'
-      - '--args=-b :$PORT main:app'
+      - '--entrypoint'
+      - 'sh'
+      - '--args'
+      - '-c'
+      - 'gunicorn -b 0.0.0.0:$PORT main:app'  # Usamos el puerto del entorno Cloud Run
 
 timeout: 900s
 options:
