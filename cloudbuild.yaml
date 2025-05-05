@@ -4,11 +4,13 @@ steps:
     args:
       - -c
       - |
+        # Desplegar el servicio en Cloud Run con un tiempo de espera extendido (600 segundos)
         gcloud run deploy budget-exceeded-handler \
-          --source src \
+          --source . \
           --region europe-west1 \
           --platform managed \
           --allow-unauthenticated \
+          --timeout 600 \
           --project $PROJECT_ID
 
 options:
