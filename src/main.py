@@ -1,6 +1,5 @@
 import os
 import base64
-import json
 from flask import Flask, request
 
 # Modo simulación
