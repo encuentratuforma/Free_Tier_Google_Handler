@@ -1,11 +1,11 @@
 import os
 import base64
 from flask import Flask, request
+from google.cloud import run_v2
+from google.protobuf import field_mask_pb2
 
-# Modo simulación
+# Simulation mode
 USE_GCP = os.environ.get("USE_GCP", "false").lower() == "true"
-if USE_GCP:
-    from google.cloud import run_v2
 
 app = Flask(__name__)
 
@@ -21,10 +21,10 @@ def stop_services():
 
     pubsub_message = envelope["message"]
 
-    # Decodificar el mensaje
+    # Decode the message
     if "data" in pubsub_message:
         decoded_data = base64.b64decode(pubsub_message["data"]).decode("utf-8")
-        print(f"Mensaje recibido: {decoded_data}")
+        print(f"Received message: {decoded_data}")
     else:
         decoded_data = ""
 
@@ -36,13 +36,24 @@ def stop_services():
         client = run_v2.ServicesClient()
         for service in services:
             name = f"projects/{project_id}/locations/{region}/services/{service}"
-            client.delete_service(name=name)
-            print(f"Deleted service: {name}")
-        return "Services stopped", 200
+            service_obj = client.get_service(name=name)
+
+            # Create a Service object with 0% traffic
+            # This routes traffic to no revisions
+            service_obj.traffic = []  # empty list == 0% traffic
+
+            update_mask = field_mask_pb2.FieldMask(paths=["traffic"])
+
+            updated_service = client.update_service(service=service_obj, update_mask=update_mask)
+            updated_service.result()  # Wait for the operation to complete
+
+            print(f"Traffic stopped (0%) for service: {service}")
+
+        return "Services traffic stopped", 200
     else:
         for service in services:
-            print(f"[SIMULACIÓN] Servicio detenido: {service}")
-        return "Services stopped (simulado)", 200
+            print(f"[SIMULATION] Service stopped (0% traffic): {service}")
+        return "Services stopped (simulated)", 200
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))

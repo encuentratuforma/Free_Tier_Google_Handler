@@ -1,15 +1,15 @@
 steps:
-  # Paso 1: Construir la imagen Docker personalizada
+  # Step 1: Build the custom Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       ['build', '-t', 'gcr.io/$PROJECT_ID/budget-exceeded-handler', '.']
 
-  # Paso 2: Subir la imagen a Container Registry
+  # Step 2: Push the image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       ['push', 'gcr.io/$PROJECT_ID/budget-exceeded-handler']
 
-  # Paso 3: Desplegar la imagen a Cloud Run
+  # Step 3: Deploy the image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       [
