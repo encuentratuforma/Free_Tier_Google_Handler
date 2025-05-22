@@ -3,17 +3,12 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'budget-exceeded-handler'     # Nombre del servicio
-      - '--source=src'                # Subcarpeta con el código
-      - '--region=europe-west1'       # Región
+      - 'budget-exceeded-handler'
+      - '--source=src'
+      - '--region=europe-west1'
       - '--platform=managed'
-      - '--allow-unauthenticated'     # Solo si debe estar abierto al público
-      - '--quiet'                     # Omitir prompts interactivos
-      - '--entry-point'               # Ejecutar el contenedor con gunicorn
-      - 'gunicorn'
-      - '-b'
-      - '0.0.0.0:$PORT'               # Escuchar en el puerto dinámico asignado por Cloud Run
-      - 'main:app'                    # Especificar la aplicación Flask
+      - '--allow-unauthenticated'
+      - '--quiet'
 
 timeout: 900s
 options:
