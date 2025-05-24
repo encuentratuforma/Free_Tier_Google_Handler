@@ -19,9 +19,11 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def stop_services():
+    logging.info("Incoming request received by stop_services()")
     envelope = request.get_json()
+
     if not envelope or "message" not in envelope:
-        logging.error("Invalid Pub/Sub message format.")
+        logging.error(f"Invalid request structure: {envelope}")
         return "Bad Request: Invalid Pub/Sub message format", 400
 
     pubsub_message = envelope["message"]
@@ -36,7 +38,8 @@ def stop_services():
     if USE_GCP:
         client = run_v2.ServicesClient()
         for service in SERVICES:
-            name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service.strip()}"
+            service = service.strip()
+            name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service}"
             try:
                 service_obj = client.get_service(name=name)
                 service_obj.traffic = []
